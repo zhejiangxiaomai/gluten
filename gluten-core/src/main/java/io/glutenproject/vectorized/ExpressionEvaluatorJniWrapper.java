@@ -51,11 +51,7 @@ public class ExpressionEvaluatorJniWrapper {
    */
   public native long nativeCreateKernelWithIterator(long allocatorId,
                                                     byte[] wsPlan,
-                                                    GeneralInIterator[] batchItr,
-                                                    int stageId,
-                                                    int partitionId,
-                                                    long taskId,
-                                                    boolean saveInputToFile
+                                                    GeneralInIterator[] batchItr
   ) throws RuntimeException;
 
   /**

@@ -36,8 +36,6 @@ class VeloxColumnarBatch final : public ColumnarBatch {
   std::shared_ptr<ArrowSchema> exportArrowSchema() override;
   std::shared_ptr<ArrowArray> exportArrowArray() override;
 
-  void saveToFile(std::shared_ptr<ArrowWriter> writer) override;
-
   facebook::velox::RowVectorPtr getRowVector() const;
   facebook::velox::RowVectorPtr getFlattenedRowVector();
 

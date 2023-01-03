@@ -18,9 +18,7 @@
 package io.glutenproject.vectorized;
 
 import io.glutenproject.memory.alloc.NativeMemoryAllocators;
-import io.glutenproject.utils.DebugUtil;
 import io.substrait.proto.Plan;
-import org.apache.spark.TaskContext;
 import org.apache.spark.sql.catalyst.expressions.Attribute;
 
 import java.io.IOException;
@@ -57,9 +55,7 @@ public abstract class NativeExpressionEvaluator implements AutoCloseable {
     long allocId = NativeMemoryAllocators.contextInstance().getNativeInstanceId();
     long handle =
         jniWrapper.nativeCreateKernelWithIterator(allocId, getPlanBytesBuf(wsPlan),
-            iterList.toArray(new GeneralInIterator[0]), TaskContext.get().stageId(),
-            TaskContext.getPartitionId(), TaskContext.get().taskAttemptId(),
-            DebugUtil.saveInputToFile());
+            iterList.toArray(new GeneralInIterator[0]));
     return createOutIterator(handle, outAttrs);
   }
 

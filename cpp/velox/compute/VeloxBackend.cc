@@ -135,7 +135,7 @@ void VeloxInitializer::Init(std::unordered_map<std::string, std::string> conf) {
   auto hiveConnector = getConnectorFactory(connector::hive::HiveConnectorFactory::kHiveConnectorName)
                            ->newConnector(kHiveConnectorId, properties, nullptr);
   registerConnector(hiveConnector);
-  facebook::velox::parquet::registerParquetReaderFactory(ParquetReaderType::NATIVE);
+  parquet::registerParquetReaderFactory(ParquetReaderType::NATIVE);
   dwrf::registerDwrfReaderFactory();
   // Register Velox functions
   registerAllFunctions();

@@ -19,7 +19,6 @@
 #include <arrow/util/range.h>
 #include <benchmark/benchmark.h>
 #include <gflags/gflags.h>
-#include <operators/writer/ArrowWriter.h>
 #include <velox/exec/PlanNodeStats.h>
 #include <velox/exec/Task.h>
 
@@ -67,10 +66,10 @@ auto BM_Generic = [](::benchmark::State& state,
     backend->ParsePlan(plan->data(), plan->size());
     auto resultIter = backend->GetResultIterator(gluten::DefaultMemoryAllocator().get(), std::move(inputIters));
     auto outputSchema = backend->GetOutputSchema();
-    ArrowWriter writer{FLAGS_write_file};
+    ArrowWriter writer;
     state.PauseTiming();
     if (!FLAGS_write_file.empty()) {
-      writer.initWriter(*(outputSchema.get()));
+      writer.initWriter(FLAGS_write_file, *(outputSchema.get()));
     }
     state.ResumeTiming();
     while (resultIter->HasNext()) {
@@ -85,7 +84,7 @@ auto BM_Generic = [](::benchmark::State& state,
         std::cout << maybeBatch.ValueOrDie()->ToString() << std::endl;
       }
       if (!FLAGS_write_file.empty()) {
-        writer.writeInBatches(maybeBatch.ValueOrDie());
+        writer.WriteInBatches(maybeBatch.ValueOrDie());
       }
       state.ResumeTiming();
     }
