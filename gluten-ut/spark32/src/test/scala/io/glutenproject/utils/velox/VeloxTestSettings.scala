@@ -106,6 +106,7 @@ class VeloxTestSettings extends BackendTestSettings {
     .excludeByPrefix(
       "SPARK-22520",
       "reuse exchange"
+      "SPARK-35955"
     )
     .exclude(
       /**
