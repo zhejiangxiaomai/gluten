@@ -105,8 +105,8 @@ class VeloxTestSettings extends BackendTestSettings {
     // Rewrite these tests because it checks Spark's physical operators.
     .excludeByPrefix(
       "SPARK-22520",
-      "reuse exchange"
-      "SPARK-35955"
+      "reuse exchange",
+      "SPARK-10215"
     )
     .exclude(
       /**
