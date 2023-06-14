@@ -105,8 +105,7 @@ class VeloxTestSettings extends BackendTestSettings {
     // Rewrite these tests because it checks Spark's physical operators.
     .excludeByPrefix(
       "SPARK-22520",
-      "reuse exchange",
-      "SPARK-10215"
+      "reuse exchange"
     )
     .exclude(
       /**
@@ -288,6 +287,8 @@ class VeloxTestSettings extends BackendTestSettings {
     // Not useful and time consuming.
     .exclude("SPARK-33084: Add jar support Ivy URI in SQL")
     .exclude("SPARK-33084: Add jar support Ivy URI in SQL -- jar contains udf class")
+    // Unstable. Needs to be fixed.
+    .exclude("SPARK-10215 Div of Decimal returns null")
   enableSuite[GlutenDatasetAggregatorSuite]
   enableSuite[GlutenDatasetOptimizationSuite]
   enableSuite[GlutenDatasetPrimitiveSuite]
