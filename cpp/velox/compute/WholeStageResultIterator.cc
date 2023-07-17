@@ -251,8 +251,9 @@ std::unordered_map<std::string, std::string> WholeStageResultIterator::getQueryC
     configs[velox::core::QueryConfig::kSessionTimezone] = getConfigValue(kSessionTimezone, "");
 
     // Set the max memory of partial aggregation as 3/4 of offheap size.
-    auto maxMemory =
-        (long)(0.75 * (double)std::stol(getConfigValue(kSparkTaskOffHeapMemory, std::to_string(facebook::velox::memory::kMaxMemory))));
+    auto maxMemory = (long)(0.75 *
+                            (double)std::stol(getConfigValue(
+                                kSparkTaskOffHeapMemory, std::to_string(facebook::velox::memory::kMaxMemory))));
     configs[velox::core::QueryConfig::kMaxPartialAggregationMemory] = std::to_string(maxMemory);
     configs[velox::core::QueryConfig::kAbandonPartialAggregationMinPct] = std::to_string(90);
     // Spill configs
@@ -302,7 +303,7 @@ void WholeStageResultIterator::updateHdfsTokens() {
 
 std::shared_ptr<velox::Config> WholeStageResultIterator::createConnectorConfig() {
   std::unordered_map<std::string, std::string> configs = {};
-  configs[velox::connector::hive::HiveConfig::kCaseSensitive] = getConfigValue(kCaseSensitive, "true");
+  configs[velox::connector::hive::HiveConfig::kFileColumnNamesReadAsLowerCase] = getConfigValue(kCaseSensitive, "true");
   return std::make_shared<velox::core::MemConfig>(configs);
 }
 
