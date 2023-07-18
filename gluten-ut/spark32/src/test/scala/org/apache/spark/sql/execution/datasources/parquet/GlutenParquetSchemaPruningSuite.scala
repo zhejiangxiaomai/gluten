@@ -16,7 +16,7 @@
  */
 
 package org.apache.spark.sql.execution.datasources.parquet
-
+import org.apache.spark.SparkConf
 import org.apache.spark.sql.GlutenSQLTestsBaseTrait
 import org.apache.spark.tags.ExtendedSQLTest
 
