@@ -23,9 +23,15 @@ import org.apache.spark.tags.ExtendedSQLTest
 @ExtendedSQLTest
 class GlutenParquetV1SchemaPruningSuite extends ParquetV1SchemaPruningSuite
   with GlutenSQLTestsBaseTrait {
+  override def sparkConf: SparkConf = {
+    super.sparkConf.set("spark.memory.offHeap.size", "3g")
+  }
 }
 
 @ExtendedSQLTest
 class GlutenParquetV2SchemaPruningSuite extends ParquetV2SchemaPruningSuite
   with GlutenSQLTestsBaseTrait {
+  override def sparkConf: SparkConf = {
+    super.sparkConf.set("spark.memory.offHeap.size", "3g")
+  }
 }
