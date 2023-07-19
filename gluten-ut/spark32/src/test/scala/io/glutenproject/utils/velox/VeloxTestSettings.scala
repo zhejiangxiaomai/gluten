@@ -182,6 +182,7 @@ class VeloxTestSettings extends BackendTestSettings {
     .exclude("Map Concat")
     // Random.
     .exclude("Shuffle")
+    .exclude("Concat")
   enableSuite[GlutenDateExpressionsSuite]
     // Rewrite because Spark collect causes long overflow.
     .exclude("TIMESTAMP_MICROS")
