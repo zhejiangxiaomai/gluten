@@ -39,6 +39,7 @@
 #include "velox/connectors/hive/storage_adapters/s3fs/S3FileSystem.h"
 #endif
 #include "jni/JniFileSystem.h"
+#include "utils/ConfigExtractor.h"
 #include "velox/common/memory/MmapAllocator.h"
 #include "velox/connectors/hive/HiveConnector.h"
 #include "velox/dwio/dwrf/reader/DwrfReader.h"
@@ -109,26 +110,9 @@ void VeloxInitializer::init(const std::unordered_map<std::string, std::string>& 
   gluten::registerJniFileSystem(); // JNI filesystem, for spilling-to-heap if we have extra JVM heap spaces
 
   // spill mode
-  std::string spillStrategy;
-  {
-    auto got = conf.find(kSpillStrategy);
-    if (got == conf.end()) {
-      // not found
-      spillStrategy = "threshold";
-    } else {
-      spillStrategy = got->second;
-    }
-  }
-
+  std::string spillStrategy = getConfigValue(conf, kSpillStrategy, "threshold");
   // mem cap ratio
-  float_t memCapRatio = 0.75;
-  {
-    auto got = conf.find(kMemoryCapRatio);
-    if (got != conf.end()) {
-      memCapRatio = std::stof(got->second);
-    }
-  }
-
+  float_t memCapRatio = std::stof(getConfigValue(conf, kMemoryCapRatio, "0.75"));
   // mem tracker
   int64_t maxMemory = facebook::velox::memory::kMaxMemory;
   if (spillStrategy == "threshold") {
@@ -141,13 +125,7 @@ void VeloxInitializer::init(const std::unordered_map<std::string, std::string>& 
   memPoolOptions_ = {.alignment = facebook::velox::memory::MemoryAllocator::kMaxAlignment, .maxCapacity = maxMemory};
 
   // spill threshold ratio (out of the memory cap)
-  float_t spillThresholdRatio = 0.6;
-  {
-    auto got = conf.find(kSpillThresholdRatio);
-    if (got != conf.end()) {
-      spillThresholdRatio = std::stof(got->second);
-    }
-  }
+  float_t spillThresholdRatio = std::stof(getConfigValue(conf, kSpillThresholdRatio, "0.6"));
 
   spillThreshold_ = (int64_t)(spillThresholdRatio * (float_t)maxMemory);
 
@@ -300,16 +278,9 @@ void VeloxInitializer::initCache(const std::unordered_map<std::string, std::stri
 }
 
 void VeloxInitializer::initIOExecutor(const std::unordered_map<std::string, std::string>& conf) {
-  int32_t ioThreads = std::stoi(kVeloxIOThreadsDefault);
-  auto got = conf.find(kVeloxIOThreads);
-  if (got != conf.end()) {
-    ioThreads = std::stoi(got->second);
-  }
-  int32_t splitPreloadPerDriver = std::stoi(kVeloxSplitPreloadPerDriverDefault);
-  got = conf.find(kVeloxSplitPreloadPerDriver);
-  if (got != conf.end()) {
-    splitPreloadPerDriver = std::stoi(got->second);
-  }
+  int32_t ioThreads = std::stoi(getConfigValue(conf, kVeloxIOThreads, kVeloxIOThreadsDefault));
+  int32_t splitPreloadPerDriver =
+      std::stoi(getConfigValue(conf, kVeloxSplitPreloadPerDriver, kVeloxSplitPreloadPerDriverDefault));
   if (ioThreads > 0) {
     ioExecutor_ = std::make_unique<folly::IOThreadPoolExecutor>(ioThreads);
     FLAGS_split_preload_per_driver = splitPreloadPerDriver;
